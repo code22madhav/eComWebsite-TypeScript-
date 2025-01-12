@@ -3,6 +3,8 @@ import {
     getAuth,
     signInWithPopup,
     GoogleAuthProvider,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
 } from 'firebase/auth';
 
 import {
@@ -36,7 +38,7 @@ const firebaseConfig = {
 
   export const db= getFirestore();
 
-  export const createuserfromAuth = async (userAuth)=>{
+  export const createuserfromAuth = async (userAuth, additionalData)=>{
     const userDocRef=doc(db, 'users', userAuth.uid);
     const userSnap=await getDoc(userDocRef);
     if(!userSnap.exists()){
@@ -47,6 +49,7 @@ const firebaseConfig = {
           displayName,
           email, 
           createdAt,
+          ...additionalData,
         });
       }catch(error){
         console.log(`error +${error.message}`);
@@ -54,3 +57,17 @@ const firebaseConfig = {
     }
     return userDocRef;
   }
+
+  export const createAuthUserWithEmailAndPassword=async(email, password)=>{
+    if(!email || !password){
+      console.log('email or password not passed to createAuth in firebase/utils');
+    }
+    return await createUserWithEmailAndPassword(auth, email, password);
+  } 
+
+  export const signInAuthUserWithEmailAndPassword=async(email, password)=>{
+    if(!email || !password){
+      console.log('email or password not passed to createAuth in firebase/utils');
+    }
+    return await signInWithEmailAndPassword(auth, email, password);
+  } 
