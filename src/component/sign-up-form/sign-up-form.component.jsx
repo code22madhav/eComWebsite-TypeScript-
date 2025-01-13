@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createAuthUserWithEmailAndPassword, createuserfromAuth } from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.componrnt";
 import './sign-up-form.style.scss';
+import { UserContext } from "../../context/user.context";
 
 const defaultFormFields = {
     displayName: '',
@@ -15,6 +16,7 @@ const defaultFormFields = {
 const SignupForm= ()=>{
     const [formFields, setFormFields]= useState(defaultFormFields);
     const {displayName, email, password, confirmPassword}= formFields;
+    const {setUser}=useContext(UserContext);
     
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
@@ -28,6 +30,7 @@ const SignupForm= ()=>{
         try {
             const {user}= await createAuthUserWithEmailAndPassword(email, password);    //this createAuth does not provide displayName explictly like signinWithGoogle therefore we pass it manually
             await createuserfromAuth(user, {displayName});
+            setUser(user);
             resetFormFeilds();
         } catch (error) {
             if(error.code==='auth/email-already-in-use'){

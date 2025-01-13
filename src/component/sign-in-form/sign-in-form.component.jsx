@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { signInWithGooglePopup, createuserfromAuth, signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.componrnt";
+import { UserContext } from "../../context/user.context";
+
 import './sign-in-form.style.scss';
 
 const defaultFormFields = {
@@ -13,6 +15,7 @@ const defaultFormFields = {
 const SigninForm= ()=>{
     const [formFields, setFormFields]= useState(defaultFormFields);
     const {email, password}= formFields;
+    const {setUser}=useContext(UserContext);
     
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
@@ -20,8 +23,8 @@ const SigninForm= ()=>{
     const handleSubmit=async(event)=>{
         event.preventDefault();         //prevent page reloding after submit
         try {
-            const response= await signInAuthUserWithEmailAndPassword(email, password);
-            console.log(response);
+            const {user}= await signInAuthUserWithEmailAndPassword(email, password);
+            setUser(user);
             resetFormFeilds();
         } catch (error) {
             switch (error.code) {

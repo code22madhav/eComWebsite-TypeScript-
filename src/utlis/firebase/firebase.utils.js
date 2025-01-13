@@ -4,7 +4,8 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    signOut
 } from 'firebase/auth';
 
 import {
@@ -70,4 +71,8 @@ const firebaseConfig = {
       console.log('email or password not passed to createAuth in firebase/utils');
     }
     return await signInWithEmailAndPassword(auth, email, password);
-  } 
+  }
+
+  export const signOutUser= async()=>{
+    return await signOut(auth);
+  }
