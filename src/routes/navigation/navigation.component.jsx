@@ -6,11 +6,7 @@ import { Fragment, useContext } from "react";
 import { ReactComponent as Logo } from '../../assets/ecommerce-shop-svgrepo-com.svg';
 import './navigation.style.scss';
 const Navigation= ()=>{
-  const {user, setUser}=useContext(UserContext);
-  const signOutHandler=async()=>{
-    await signOutUser();
-    setUser(null);
-  }
+  const {user}=useContext(UserContext);
     return(
       <Fragment>
         <div className='navigation'>
@@ -21,7 +17,7 @@ const Navigation= ()=>{
             <Link className='nav-link' to='/shop'>
                 SHOP
             </Link>
-            {user ? (<span className='nav-link' onClick={signOutHandler}>SIGN OUT</span>) : 
+            {user ? (<span className='nav-link' onClick={signOutUser}>SIGN OUT</span>) : 
             (<Link className='nav-link' to='/auth'>SIGN IN</Link>)}
             </div>
         </div>

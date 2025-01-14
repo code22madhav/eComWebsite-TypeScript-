@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
-import { signInWithGooglePopup, createuserfromAuth, signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
+import { useState } from "react";
+import { signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.componrnt";
-import { UserContext } from "../../context/user.context";
 
 import './sign-in-form.style.scss';
 
@@ -15,7 +14,6 @@ const defaultFormFields = {
 const SigninForm= ()=>{
     const [formFields, setFormFields]= useState(defaultFormFields);
     const {email, password}= formFields;
-    const {setUser}=useContext(UserContext);
     
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
@@ -23,8 +21,7 @@ const SigninForm= ()=>{
     const handleSubmit=async(event)=>{
         event.preventDefault();         //prevent page reloding after submit
         try {
-            const {user}= await signInAuthUserWithEmailAndPassword(email, password);
-            setUser(user);
+            await signInAuthUserWithEmailAndPassword(email, password);
             resetFormFeilds();
         } catch (error) {
             switch (error.code) {
@@ -45,8 +42,7 @@ const SigninForm= ()=>{
     }
     //google signin Code
     const signInWithGoogle= async()=>{
-        const {user}= await signInWithGooglePopup();
-        await createuserfromAuth(user);
+        await signInWithGooglePopup();
     }//type button is very much important for second button because button inside form always have a default type submit so it will trigger the handleSubmit function therfore to prevent hitting it we state it's just of type button
     return(
         <div className="sign-in-container">
