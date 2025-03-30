@@ -1,5 +1,5 @@
 import { ReactComponent as Logo } from '../../assets/ecommerce-shop-svgrepo-com.svg';
-import './navigation.style.scss';
+import {NavigationContainer, LogoContainer, NavLinksContainer, NavLink} from './navigation.style';
 
 import { Outlet, Link} from "react-router-dom";
 import { Fragment, useContext } from "react";
@@ -17,23 +17,21 @@ const Navigation= ()=>{
   const {isCartopen}=useContext(CartContext);
     return(
       <Fragment>
-        <div className='navigation'>
-            <Link className='logo-container' to='/'>
+        <NavigationContainer>
+            <LogoContainer to='/'>
                 <Logo className='logo' />
-            </Link>
-            <div className='nav-links-container'>
-            <Link className='nav-link' to='/shop'>
-                SHOP
-            </Link>
-            {user ? (<span className='nav-link' onClick={signOutUser}>SIGN OUT</span>) : 
-            (<Link className='nav-link' to='/auth'>SIGN IN</Link>)}
+            </LogoContainer>
+            <NavLinksContainer>
+            <NavLink to='/shop'>SHOP</NavLink>
+            {user ? (<NavLink as='span' onClick={signOutUser}>SIGN OUT</NavLink>) :
+            (<NavLink to='/auth'>SIGN IN</NavLink>)}
             <CartIcon/>
-            </div>
+            </NavLinksContainer>
             {isCartopen && <CartDropDown/>}
-        </div>
+        </NavigationContainer>
         <Outlet />
       </Fragment>
-    );
+    ); /*style component provides one powerful feature where we can directly tell it which html tag we want in as={} */
   }
 
   export default Navigation;
