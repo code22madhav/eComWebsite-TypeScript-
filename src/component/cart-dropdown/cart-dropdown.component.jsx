@@ -1,5 +1,5 @@
-import Button from '../button/button.component';
-import './cart-dropdown.styles.scss';
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
+import {CartDropDownContainer, CartItemContainer} from './cart-dropdown.styles';
 import CartItem from '../cart-item/cart-item.component';
 import { useContext } from 'react';
 import { CartContext } from '../../context/cart.context';
@@ -10,12 +10,12 @@ const CartDropDown=()=>{
     const navigate=useNavigate();
     const Navigate=()=>navigate('/checkout');
     return(
-    <div className='cart-dropdown-container'>
-        <div className='cart-items'>
+    <CartDropDownContainer>
+        <CartItemContainer>
             {cartItem.map((items)=>(<CartItem key={items.id} cartItem={items}/>))}
-        </div>
-        <Button onClick={()=> Navigate()}>GO TO CHECKOUT</Button>
-    </div>
+        </CartItemContainer>
+        <Button buttonType={BUTTON_TYPE_CLASSES.base} onClick={()=> Navigate()}>GO TO CHECKOUT</Button>
+    </CartDropDownContainer>
     )
 }
 export default CartDropDown;
