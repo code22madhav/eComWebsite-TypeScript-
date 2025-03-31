@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { createAuthUserWithEmailAndPassword, createuserfromAuth } from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
-import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";
-import './sign-up-form.style.scss';
+import Button from "../button/button.component";
+import {SignUpContainer} from'./sign-up-form.style';
 
 const defaultFormFields = {
     displayName: '',
@@ -42,7 +42,7 @@ const SignupForm= ()=>{
         setFormFields({...formFields,[name]:value});    //value property help to indentify which input is changed otherwise we can't write a generic function to handle all the 4 changes in input fields
     }
     return(
-        <div className="sign-up-container">
+        <SignUpContainer>
             <h2>Don't have a Account</h2>
             <span>Create an account with email and password</span>
             <form onSubmit={handleSubmit}>
@@ -52,7 +52,7 @@ const SignupForm= ()=>{
                 <FormInput label="Confirm Password" type="password" required onChange={onChangeHandler} name="confirmPassword" value={confirmPassword}/>
                 <Button type="submit">Sign Up</Button>
             </form>
-        </div>
+        </SignUpContainer>
     )
 }
 export default SignupForm;

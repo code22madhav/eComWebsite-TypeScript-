@@ -1,5 +1,5 @@
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
-import {CartDropDownContainer, CartItemContainer} from './cart-dropdown.styles';
+import {CartDropDownContainer, CartItemContainer, EmptyMessage} from './cart-dropdown.styles';
 import CartItem from '../cart-item/cart-item.component';
 import { useContext } from 'react';
 import { CartContext } from '../../context/cart.context';
@@ -12,10 +12,11 @@ const CartDropDown=()=>{
     return(
     <CartDropDownContainer>
         <CartItemContainer>
-            {cartItem.map((items)=>(<CartItem key={items.id} cartItem={items}/>))}
+            {cartItem && cartItem.length > 0 ? (cartItem.map((items)=>(<CartItem key={items.id} cartItem={items}/>))) : (<EmptyMessage>Your cart is empty</EmptyMessage>)}
         </CartItemContainer>
         <Button buttonType={BUTTON_TYPE_CLASSES.base} onClick={()=> Navigate()}>GO TO CHECKOUT</Button>
     </CartDropDownContainer>
     )
 }
+// only {cartItem ? ():() will not work since empty array is also treated as truthy value in Js there use cartItem && cartItem.length}
 export default CartDropDown;

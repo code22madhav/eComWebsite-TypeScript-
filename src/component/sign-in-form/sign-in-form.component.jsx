@@ -3,7 +3,7 @@ import { signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from "../../
 import FormInput from "../form-input/form-input.component";
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";
 
-import './sign-in-form.style.scss';
+import {SignInContainer, ButtonContainer} from './sign-in-form.style';
 
 const defaultFormFields = {
     email: '',
@@ -45,18 +45,18 @@ const SigninForm= ()=>{
         await signInWithGooglePopup();
     }//type button is very much important for second button because button inside form always have a default type submit so it will trigger the handleSubmit function therfore to prevent hitting it we state it's just of type button
     return(
-        <div className="sign-in-container">
+        <SignInContainer>
             <h2>Already have a Account</h2>
             <span>Sign in with email and password</span>
             <form onSubmit={handleSubmit}>
                 <FormInput label="Email" type="email" required onChange={onChangeHandler} name="email" value={email}/>
                 <FormInput label="Password" type="password" required onChange={onChangeHandler} name="password" value={password}/>
-                <div className="buttons-container">
+                <ButtonContainer>
                     <Button type="submit">Sign In</Button>
                     <Button type="button" buttonType={BUTTON_TYPE_CLASSES.google} onClick={signInWithGoogle}>Google SignIn</Button>
-                </div>
+                </ButtonContainer>
             </form>
-        </div>
+        </SignInContainer>
     )
 }
 export default SigninForm;
