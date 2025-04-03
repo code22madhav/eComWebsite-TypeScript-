@@ -6,13 +6,13 @@ import { CartContext } from '../../context/cart.context';
 import { useNavigate } from 'react-router-dom';
 
 const CartDropDown=()=>{
-    const {cartItem}=useContext(CartContext);
+    const {cartItems}=useContext(CartContext);
     const navigate=useNavigate();
     const Navigate=()=>navigate('/checkout');
     return(
     <CartDropDownContainer>
         <CartItemContainer>
-            {cartItem && cartItem.length > 0 ? (cartItem.map((items)=>(<CartItem key={items.id} cartItem={items}/>))) : (<EmptyMessage>Your cart is empty</EmptyMessage>)}
+            {cartItems && cartItems.length > 0 ? (cartItems.map((items)=>(<CartItem key={items.id} cartItem={items}/>))) : (<EmptyMessage>Your cart is empty</EmptyMessage>)}
         </CartItemContainer>
         <Button buttonType={BUTTON_TYPE_CLASSES.base} onClick={()=> Navigate()}>GO TO CHECKOUT</Button>
     </CartDropDownContainer>
