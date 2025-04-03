@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useReducer } from "react";
 
 const addcartItem=(product, cartItem)=>{
     //check
@@ -48,34 +48,94 @@ export const CartContext=createContext({
     totalPrice: 0,
 });
 
-export const CartProvider=({children})=>{
-    const [isCartopen, setCartopen]=useState(false);
-    const [cartItem, setCartItem]=useState([]);
-    const [cartCount, setcartCount]=useState(0);
-    const [totalPrice, settotalPrice]=useState(0);
-    const addItemtoCart=(product)=>{
-        setCartItem(addcartItem(product,cartItem));
+const CART_ACTION_TYPES = {
+  SET_IS_CART_OPEN: 'SET_IS_CART_OPEN',
+  SET_CART_ITEMS: 'SET_CART_ITEMS',
+  SET_CART_COUNT: 'SET_CART_COUNT',
+  SET_CART_TOTAL: 'SET_CART_TOTAL',
+};
+
+const INITIAL_STATE = {
+  isCartopen: false,
+  cartItems: [],
+  cartCount: 0,
+  cartTotal: 0,
+};
+
+const cartReducer=((state, action)=>{
+  const {type, payload}=action;
+
+  switch(type){
+    case CART_ACTION_TYPES.SET_CART_ITEMS:{
+      return{
+        ...state,
+        ...payload,
+      };
     }
+    case CART_ACTION_TYPES.SET_IS_CART_OPEN:{
+      return{
+        ...state,
+        isCartopen:payload,
+      };
+    }
+    default:
+      throw new Error(`Unhandled type ${type} in cartReducer`);
+  }
+})
+
+export const CartProvider=({children})=>{
+    // const [isCartopen, setCartopen]=useState(false);
+    // const [cartItem, setCartItem]=useState([]);
+    // const [cartCount, setcartCount]=useState(0);
+    // const [totalPrice, settotalPrice]=useState(0);
+
+    const [{cartItems, cartTotal, cartCount, isCartopen}, dispatch]=useReducer(cartReducer, INITIAL_STATE);
+    const updateCartItemReducer=(newCartItem)=>{
+        const newCartCount=newCartItem.reduce((total, cartItem)=>total + cartItem.quantity,0);
+        const newCartTotal=newCartItem.reduce((total, item )=>{ 
+          if(item.quantity===1){
+              return total+=item.price
+          }
+          return total+=(item.price*item.quantity)},0);
+
+          dispatch({type: CART_ACTION_TYPES.SET_CART_ITEMS, payload:{cartItems:newCartItem, cartCount: newCartCount, cartTotal: newCartTotal}});
+    }
+
+    const setCartopen=(bool)=>{
+      dispatch({type: CART_ACTION_TYPES.SET_IS_CART_OPEN, payload:bool});
+    }
+
+    const addItemtoCart=(product)=>{
+        const newCartItem=addcartItem(product,cartItems);
+        updateCartItemReducer(newCartItem);
+    }
+
     const removeItemToCart = (cartItemToRemove) => {
-        setCartItem(removeCartItem(cartItem, cartItemToRemove));
+        const newCartItem=removeCartItem(cartItems, cartItemToRemove);
+        updateCartItemReducer(newCartItem);
       };
     
       const clearItemFromCart = (cartItemToClear) => {
-        setCartItem(clearCartItem(cartItem, cartItemToClear));
+        const newCartItem=clearCartItem(cartItems, cartItemToClear);
+        updateCartItemReducer(newCartItem);
       };
-    useEffect(()=>{
-        const newtotal=cartItem.reduce((total, cartItem)=>total + cartItem.quantity,0);
-        setcartCount(newtotal);
-    }, [cartItem])
-    useEffect(()=>{
-        const totalprices=cartItem.reduce((total, item )=>{ 
-            if(item.quantity===1){
-                return total+=item.price
-            }
-            return total+=(item.price*item.quantity)},0);
-        settotalPrice(totalprices);
-    }, [cartItem]);
-    const value={isCartopen, setCartopen, cartItem, addItemtoCart, cartCount, setCartItem, totalPrice, removeItemToCart, clearItemFromCart};
+
+      //No need of these useEffect we created a single function to perform all the operation which will 
+      //directly pass the final payload value after all the calculations.
+
+    // useEffect(()=>{
+    //     const newtotal=cartItem.reduce((total, cartItem)=>total + cartItem.quantity,0);
+    //     setcartCount(newtotal);
+    // }, [cartItem])
+    // useEffect(()=>{
+    //     const totalprices=cartItem.reduce((total, item )=>{ 
+    //         if(item.quantity===1){
+    //             return total+=item.price
+    //         }
+    //         return total+=(item.price*item.quantity)},0);
+    //     settotalPrice(totalprices);
+    // }, [cartItem]);
+    const value={isCartopen, setCartopen, cartItems, addItemtoCart, cartCount, cartTotal, removeItemToCart, clearItemFromCart};
     return(
         <CartContext.Provider value={value}>{children}</CartContext.Provider>
     )
