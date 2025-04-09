@@ -1,3 +1,25 @@
+
+
+
+/*
+
+
+
+No use of this file since we have migrated to redux store for mainting user keeping this for 
+learning purpose 
+
+Don't forget to wrap the complete application in userProvide to make this file working, If you want to
+test it in this way.
+
+
+
+
+
+
+
+
+
+*/
 import { createContext, useEffect, useReducer } from "react";
 import { onAuthStateChangedListner, createuserfromAuth} from "../utlis/firebase/firebase.utils";
 

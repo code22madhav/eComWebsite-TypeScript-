@@ -1,10 +1,11 @@
 import { ReactComponent as Logo } from '../../assets/ecommerce-shop-svgrepo-com.svg';
 import {NavigationContainer, LogoContainer, NavLinksContainer, NavLink} from './navigation.style';
 
-import { Outlet, Link} from "react-router-dom";
+import { Outlet} from "react-router-dom";
 import { Fragment, useContext } from "react";
+import { useSelector } from 'react-redux';
 
-import { UserContext } from "../../context/user.context";
+import { userSelector } from '../../store/user/user.selector';
 import { CartContext } from '../../context/cart.context';
 
 import { signOutUser } from "../../utlis/firebase/firebase.utils";
@@ -13,7 +14,7 @@ import CartIcon from '../../component/cart-icon/cart-icon.component';
 import CartDropDown from "../../component/cart-dropdown/cart-dropdown.component";
 
 const Navigation= ()=>{
-  const {user}=useContext(UserContext);
+  const user=useSelector(userSelector);
   const {isCartopen}=useContext(CartContext);
     return(
       <Fragment>
