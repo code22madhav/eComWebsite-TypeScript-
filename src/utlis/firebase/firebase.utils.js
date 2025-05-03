@@ -59,12 +59,12 @@ const firebaseConfig = {
     const collectionRef=collection(db, 'categories');
     const q=query(collectionRef);
     const querySnapshot = await getDocs(q);
-    const data=querySnapshot.docs.reduce((acc,documentSnap)=>{
-      const {title, items}=documentSnap.data();
-      acc[title.toLowerCase()]=items;
-      return acc;
-    },{})
-    return data;
+    return querySnapshot.docs.map((documentSnap)=> documentSnap.data());
+    /*if you are wondering what is happening here:
+    we are directly sending the complete data array to shopcomponent there using dispatach we set the data
+    and we will process the data in categoriesSelector before using it otherwise data is stored in array format
+    2nd .docs gives us an array therefore the map function is working here because simply querySnapshot is array
+    */
   }
   
   export const createuserfromAuth = async (userAuth, additionalData)=>{
