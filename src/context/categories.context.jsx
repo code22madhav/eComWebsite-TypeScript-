@@ -1,3 +1,13 @@
+/*
+
+No use of this file since we have migrated to redux store for getting categories data keeping this for 
+learning purpose 
+
+Don't forget to wrap the complete application in categoriesProvider to make this file working, If you want to
+test it in this way.
+
+*/
+
 import { createContext, useEffect, useState } from "react";
 // import SHOP_DATA from '../shop-data';
 import { getCollectionAndDocuments  } from "../utlis/firebase/firebase.utils";

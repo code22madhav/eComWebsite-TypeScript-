@@ -1,3 +1,6 @@
+/*No need of this file since we have migrated on redux store instead of using context
+make sure to wrap the application inside cartContext Provider if you want to use this */
+
 import { createContext, useReducer } from "react";
 
 const addcartItem=(product, cartItem)=>{
@@ -35,7 +38,7 @@ const removeCartItem = (cartItems, cartItemToRemove) => {
     );
   };
   
-  const clearCartItem = (cartItems, cartItemToClear) => cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
+const clearCartItem = (cartItems, cartItemToClear) => cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
 
 export const CartContext=createContext({
     isCartopen: false,
