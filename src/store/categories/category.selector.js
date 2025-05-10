@@ -3,8 +3,12 @@ import { createSelector } from "reselect";
 const selectcategoriesReducer=((state)=>{
   // console.log('one')
    return state.categories});
+   //this line state.categories capture the entire slice of categories.reducer mentioned in root reducer
 
-
+export const selectcategoriesisLoading=createSelector(
+  [selectcategoriesReducer],
+  (categoriesSlice)=>categoriesSlice.isLoading
+)
 export const selectCategories=createSelector(
   [selectcategoriesReducer],
   (categoriesSlice)=>categoriesSlice.categories

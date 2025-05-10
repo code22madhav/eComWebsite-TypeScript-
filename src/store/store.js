@@ -1,6 +1,7 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import  storage  from 'redux-persist/lib/storage';
+import { thunk } from 'redux-thunk';
 // import logger from 'redux-logger';
 
 import { rootReducer } from './root-reducer';
@@ -30,11 +31,15 @@ const loggerMiddleware = (store) => (next) => (action) => {
 const persistConfig={
   key:'root',
   storage,
-  blacklist: ['user']
+  whitelist: ['user']
 }
+/*since we have a spinner while the application loads so we no need any more to persist the 
+other reducer values therefore instead of doing blacklist:[user], which refers don't persist user
+and persist all other reducer values we will be doing whitelist:[user], which implies persist
+only user */
   
 const persistedReducer=persistReducer(persistConfig, rootReducer);
-const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware].filter(Boolean);
+const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware, thunk].filter(Boolean);
 
 const composeEnhancer = (process.env.NODE_ENV !== 'production' && window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));

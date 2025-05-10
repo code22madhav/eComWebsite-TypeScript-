@@ -1,21 +1,16 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import { setCategories } from '../../store/categories/category.action';
-import { getCollectionAndDocuments } from '../../utlis/firebase/firebase.utils';
+import { fetchCategoriesAsync } from '../../store/categories/category.action';
 import CategoriesPreview from '../categories-preview/categories-preview.component';
 import Category from '../category-component/category.component';
 
 const Shop=()=>{
   const dispatch=useDispatch();
   useEffect(()=>{
-          const getData= async()=>{
-              const categories= await getCollectionAndDocuments();
-              dispatch(setCategories(categories));
-          }
-          getData();
-    },[dispatch])
+      dispatch(fetchCategoriesAsync());
+  },[dispatch]) //if you remove this dispatch from dependecy array it will through a waring it do't hv anyuse 
 
     return(
     <Routes>
