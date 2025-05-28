@@ -31,12 +31,12 @@ const loggerMiddleware = (store) => (next) => (action) => {
 const persistConfig={
   key:'root',
   storage,
-  whitelist: ['user']
+  whitelist: ['cart']
 }
 /*since we have a spinner while the application loads so we no need any more to persist the 
 other reducer values therefore instead of doing blacklist:[user], which refers don't persist user
-and persist all other reducer values we will be doing whitelist:[user], which implies persist
-only user */
+and persist all other reducer values we will be doing whitelist:[cart], which implies persist
+only cartr */
   
 const persistedReducer=persistReducer(persistConfig, rootReducer);
 const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware, thunk].filter(Boolean);
