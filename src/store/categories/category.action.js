@@ -1,5 +1,5 @@
 import CATEGORIES_ACTION_TYPE from "./category.types";
-import { getCollectionAndDocuments } from "../../utlis/firebase/firebase.utils";
+// import { getCollectionAndDocuments } from "../../utlis/firebase/firebase.utils";
 
 export const fetchCategoriesStart=(()=>{
     return{type: CATEGORIES_ACTION_TYPE.FETCH_CATEGORIES_START}
@@ -25,12 +25,17 @@ const reduxthunkMiddleware=(store)=>(next)=>(action)=>{
     }
 }
 */
-export const fetchCategoriesAsync=()=>async(dispatch)=>{
-    dispatch(fetchCategoriesStart());
-    try{
-        const categories= await getCollectionAndDocuments();
-        dispatch(fetchCategoriesSuccess(categories));
-    }catch(error){
-        dispatch(fetchCategoriesFailed(error));
-    }
-}
+
+//We were passing this function as action to thunk to make async call from shop component now we have
+// migrated to saga and we are calling fetchcategorystart from shop component.
+
+
+// export const fetchCategoriesAsync=()=>async(dispatch)=>{
+//     dispatch(fetchCategoriesStart());
+//     try{
+//         const categories= await getCollectionAndDocuments();
+//         dispatch(fetchCategoriesSuccess(categories));
+//     }catch(error){
+//         dispatch(fetchCategoriesFailed(error));
+//     }
+// }

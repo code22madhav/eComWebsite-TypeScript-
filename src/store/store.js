@@ -1,8 +1,10 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import  storage  from 'redux-persist/lib/storage';
-import { thunk } from 'redux-thunk';
+// import { thunk } from 'redux-thunk'; Migrating to saga therfore no need to import thunk
 // import logger from 'redux-logger';
+import createSagaMiddleware from 'redux-saga';
+import { rootSaga } from './root-saga';
 
 import { rootReducer } from './root-reducer';
 
@@ -13,6 +15,8 @@ currentState
 action
 nextState
 which sometime make difficult to understand when excatly what code is running*/
+
+const sagaMiddleware=createSagaMiddleware();
 
 const loggerMiddleware = (store) => (next) => (action) => {
     if (!action.type) {
@@ -39,7 +43,8 @@ and persist all other reducer values we will be doing whitelist:[cart], which im
 only cartr */
   
 const persistedReducer=persistReducer(persistConfig, rootReducer);
-const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware, thunk].filter(Boolean);
+// const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware, thunk].filter(Boolean);
+const middleWares = [process.env.NODE_ENV !== 'production' && loggerMiddleware, sagaMiddleware].filter(Boolean);
 
 const composeEnhancer = (process.env.NODE_ENV !== 'production' && window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
@@ -51,6 +56,9 @@ export const store = createStore(persistedReducer, undefined, composedEnhancers)
 /*If you don't want persist in redux go with this simple line
 export const store = createStore(rootreducer, undefined, composedEnhancers);
  */
+
+//ater the store is initiated then we tell saga middleware to run
+sagaMiddleware.run(rootSaga);
 
 export const persistor=persistStore(store);
 
