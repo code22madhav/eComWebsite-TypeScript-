@@ -52,7 +52,7 @@ const firebaseConfig = {
       batch.set(documentRef, obj);
     });
     await batch.commit();
-    console.log("done");
+    // console.log("done");
   };
 
   export const getCollectionAndDocuments= async()=>{
@@ -84,7 +84,7 @@ const firebaseConfig = {
         console.log(`error +${error.message}`);
       }
     }
-    return userDocRef;
+    return userSnap;
   }
 
   export const createAuthUserWithEmailAndPassword=async(email, password)=>{
@@ -107,4 +107,13 @@ const firebaseConfig = {
 
   export const onAuthStateChangedListner= (callback)=>{
      onAuthStateChanged(auth, callback);
+  }
+
+  export const getCurrentUser=()=>{
+    return new Promise((resolve,reject)=>{
+      const unsuscribe=onAuthStateChanged(auth, (userAuth)=>{
+      unsuscribe();
+      resolve(userAuth);
+    },reject);
+  })
   }

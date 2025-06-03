@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { signInWithGooglePopup, signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
+// import { signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";
+import { googleSignInStart, emailSignInStart } from "../../store/user/user.action";
 
 import {SignInContainer, ButtonContainer} from './sign-in-form.style';
+import { useDispatch } from "react-redux";
 
 const defaultFormFields = {
     email: '',
@@ -14,6 +16,7 @@ const defaultFormFields = {
 const SigninForm= ()=>{
     const [formFields, setFormFields]= useState(defaultFormFields);
     const {email, password}= formFields;
+    const dispatch=useDispatch();
     
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
@@ -21,7 +24,7 @@ const SigninForm= ()=>{
     const handleSubmit=async(event)=>{
         event.preventDefault();         //prevent page reloding after submit
         try {
-            await signInAuthUserWithEmailAndPassword(email, password);
+            dispatch(emailSignInStart(email, password));
             resetFormFeilds();
         } catch (error) {
             switch (error.code) {
@@ -42,7 +45,7 @@ const SigninForm= ()=>{
     }
     //google signin Code
     const signInWithGoogle= async()=>{
-        await signInWithGooglePopup();
+        dispatch(googleSignInStart());
     }//type button is very much important for second button because button inside form always have a default type submit so it will trigger the handleSubmit function therfore to prevent hitting it we state it's just of type button
     return(
         <SignInContainer>

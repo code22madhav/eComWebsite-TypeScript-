@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { createAuthUserWithEmailAndPassword, createuserfromAuth } from "../../utlis/firebase/firebase.utils";
+import { useDispatch } from "react-redux";
+// import { createAuthUserWithEmailAndPassword, createuserfromAuth } from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import {SignUpContainer} from'./sign-up-form.style';
+import { signUpStart } from "../../store/user/user.action";
 
 const defaultFormFields = {
     displayName: '',
@@ -15,6 +17,7 @@ const defaultFormFields = {
 const SignupForm= ()=>{
     const [formFields, setFormFields]= useState(defaultFormFields);
     const {displayName, email, password, confirmPassword}= formFields;
+    const dispatch=useDispatch();
     
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
@@ -26,8 +29,10 @@ const SignupForm= ()=>{
             return;
         }
         try {
-            const {user}= await createAuthUserWithEmailAndPassword(email, password);    //this createAuth does not provide displayName explictly like signinWithGoogle therefore we pass it manually
-            await createuserfromAuth(user, {displayName});
+            // const {user}= await createAuthUserWithEmailAndPassword(email, password);    //this createAuth does not provide displayName explictly like signinWithGoogle therefore we pass it manually
+            // await createuserfromAuth(user, {displayName});
+            //earlier we were calling utily func directly now we have moved this logic in sagas
+            dispatch(signUpStart(email, password, displayName)); 
             resetFormFeilds();
         } catch (error) {
             if(error.code==='auth/email-already-in-use'){

@@ -4,11 +4,13 @@ import {NavigationContainer, LogoContainer, NavLinksContainer, NavLink} from './
 import { Outlet} from "react-router-dom";
 import { Fragment } from "react";
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { userSelector } from '../../store/user/user.selector';
 import { selectIscartOpen } from '../../store/cart/cart.selector';
 
-import { signOutUser } from "../../utlis/firebase/firebase.utils";
+// import { signOutUser } from "../../utlis/firebase/firebase.utils";
+import { signOutStart } from '../../store/user/user.action';
 
 import CartIcon from '../../component/cart-icon/cart-icon.component';
 import CartDropDown from "../../component/cart-dropdown/cart-dropdown.component";
@@ -16,6 +18,10 @@ import CartDropDown from "../../component/cart-dropdown/cart-dropdown.component"
 const Navigation= ()=>{
   const user=useSelector(userSelector);
   const isCartopen=useSelector(selectIscartOpen);
+  const dispatch=useDispatch();
+  const signOut=()=>{
+    dispatch(signOutStart());
+  }
     return(
       <Fragment>
         <NavigationContainer>
@@ -24,7 +30,7 @@ const Navigation= ()=>{
             </LogoContainer>
             <NavLinksContainer>
             <NavLink to='/shop'>SHOP</NavLink>
-            {user ? (<NavLink as='span' onClick={signOutUser}>SIGN OUT</NavLink>) :
+            {user ? (<NavLink as='span' onClick={signOut}>SIGN OUT</NavLink>) :
             (<NavLink to='/auth'>SIGN IN</NavLink>)}
             <CartIcon/>
             </NavLinksContainer>
