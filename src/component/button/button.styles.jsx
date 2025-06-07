@@ -64,6 +64,7 @@ export const LoadingSpinner = styled.div`
   display: inline-block;
   width: 30px;
   height: 30px;
+  margin-top: 30px;
   border: 3px solid rgba(195, 195, 195, 0.6);
   border-radius: 50%;
   border-top-color: #636767;
