@@ -57,4 +57,11 @@ export const categorySelector=createSelector(
   moving the logic of desctructing the data from firebase utils to useSelector has merit and the demerits
   aslo as you can see eveytime useSelector runs it throws us a new object after reducing.*/
 
-
+/* we work with the concept of immutability when working with reducers this helps us to catch the
+state changes efficiently and reder/rerender based on that, If we pass the old state redux will do
+checking by refernce and that will lead to skip re rendering even though the state properties
+changes but the refernce doesn't change therefore we pass a new state always like this
+{...state, currentUser: payload} So that every time new state is passed and re-rendering happens
+Now a question will arise then this will trigger unnecessary rerendering even if the values are
+same everytime new state is passed it will re-render. But no that's work of useSelector it 
+compares old state value with new state value and olny re-render if it detects any change */
