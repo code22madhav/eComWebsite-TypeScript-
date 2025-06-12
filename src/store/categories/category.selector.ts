@@ -1,14 +1,16 @@
 import { createSelector } from "reselect";
+import { CategoriesState } from './category.reducer'; 
+import { CategoryMap } from "./category.types";
 
-const selectcategoriesReducer=((state)=>{
+const selectcategoriesReducer=((state):CategoriesState=>{
   // console.log('one')
    return state.categories});
    //this line state.categories capture the entire slice of categories.reducer mentioned in root reducer
 
 export const selectcategoriesisLoading=createSelector(
   [selectcategoriesReducer],
-  (categoriesSlice)=>categoriesSlice.isLoading
-)
+  (categoriesSlice)=>categoriesSlice.isLoading //typeScript automatically infer these selector since selectcategoriesReduce
+)                                              // is passed from there typeScript inherit the type
 export const selectCategories=createSelector(
   [selectcategoriesReducer],
   (categoriesSlice)=>categoriesSlice.categories
@@ -23,13 +25,12 @@ In this example we are just memonizing twice one in categorySelector and one in 
 really nead to do this just doing for the sake of learing in the selectCategoris only the array is
 destructed from the reducer therfore we are directly doing categories.redude here*/
 export const categorySelector=createSelector(
-  [selectCategories], (categories)=>{
-    // console.log('first')
+  [selectCategories], (categories):CategoryMap=>{
     return categories.reduce((acc,data)=>{
       const {title, items}=data;
       acc[title.toLowerCase()]=items;
       return acc;
-    },{})}
+    },{} as CategoryMap)}
   );
 
   /*This was an ordinary way to write selector without using reselect here what will happens whenever 
