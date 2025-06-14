@@ -1,4 +1,10 @@
-export const userSelector=((state)=> state.user.currentUser);
+import { createSelector } from "reselect";
+import { UserState } from "./user.reducer";
+export const selectUserReducer=(state):UserState=> state.user;
+export const userSelector=createSelector(
+    [selectUserReducer],
+    (user)=>user.currentUser
+);
 
 /*why it not directly state.currentUser because 
 from this reducer eveything is combinned in root reducer where we are storing  userReducer in user key

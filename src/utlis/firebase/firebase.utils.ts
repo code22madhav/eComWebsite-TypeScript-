@@ -1,3 +1,4 @@
+import { Category } from "../../store/categories/category.types";
 import { initializeApp } from "firebase/app";
 import {
     getAuth,
@@ -6,7 +7,9 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+    User,
+    NextOrObserver
 } from 'firebase/auth';
 
 import {
@@ -17,7 +20,8 @@ import {
   collection,
   writeBatch,
   query,
-  getDocs
+  getDocs,
+  QueryDocumentSnapshot
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -44,7 +48,11 @@ const firebaseConfig = {
 
   export const db= getFirestore();
 
-  export const addCollectionAndDocuments = async (collectionKey, objectToAdd)=>{
+  export type ObjectToAdd={
+    title: string,
+  }
+//why we are making ObjectToAdd because our data is in this format: [{title: hats, []}, {}]
+  export const addCollectionAndDocuments = async <T extends ObjectToAdd>(collectionKey: string, objectToAdd: T[]):Promise<void>=>{
     const collectionRef=collection(db, collectionKey);
     const batch=writeBatch(db);
     objectToAdd.forEach((obj) => {
@@ -55,11 +63,11 @@ const firebaseConfig = {
     // console.log("done");
   };
 
-  export const getCollectionAndDocuments= async()=>{
+  export const getCollectionAndDocuments= async():Promise<Category[]>=>{
     const collectionRef=collection(db, 'categories');
     const q=query(collectionRef);
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((documentSnap)=> documentSnap.data());
+    return querySnapshot.docs.map((documentSnap)=> documentSnap.data() as Category);//if you don't tell typescipt what the documentSnap give it will through error since the data is coming in querry therfore typescipt dont know about it
     /*if you are wondering what is happening here:
     we are directly sending the complete data array to shopcomponent there using dispatach we set the data
     and we will process the data in categoriesSelector before using it otherwise data is stored in array format
@@ -67,7 +75,16 @@ const firebaseConfig = {
     */
   }
   
-  export const createuserfromAuth = async (userAuth, additionalData)=>{
+  export type AdditionalData={
+    displayName?: string,
+  }
+  export type UserData={
+    createdAt: Date,
+    displayName: string,
+    email: string
+  }
+  //userAuth is user object, firebase/auth inbuit provides a interface for user object called User
+  export const createuserfromAuth = async (userAuth: User, additionalData={} as AdditionalData):Promise< void | QueryDocumentSnapshot<UserData>>=>{
     const userDocRef=doc(db, 'users', userAuth.uid);
     const userSnap=await getDoc(userDocRef);
     if(!userSnap.exists()){
@@ -81,35 +98,39 @@ const firebaseConfig = {
           ...additionalData,
         });
       }catch(error){
-        console.log(`error +${error.message}`);
+        console.log(`error +${error}`);
       }
     }
-    return userSnap;
+    return userSnap as QueryDocumentSnapshot<UserData>;
   }
+//Here also userSnap is a snapshot therfore typescript is unable to determin what kind of data is coming therefore firebase/firestore automatically provides us an class for this, QuerryDocumentSnapshot<T> where T is generic we have to tell what kind of data it will be.
 
-  export const createAuthUserWithEmailAndPassword=async(email, password)=>{
+  export const createAuthUserWithEmailAndPassword=async(email:string, password:string)=>{
     if(!email || !password){
       console.log('email or password not passed to createAuth in firebase/utils');
     }
     return await createUserWithEmailAndPassword(auth, email, password);
   } 
+//no need to typecast above function createUserWithEmailAndPassword automatically comes with typecasting it reeturn us a promise as type
 
-  export const signInAuthUserWithEmailAndPassword=async(email, password)=>{
+  export const signInAuthUserWithEmailAndPassword=async(email: string, password:string)=>{
     if(!email || !password){
       console.log('email or password not passed to createAuth in firebase/utils');
     }
     return await signInWithEmailAndPassword(auth, email, password);
   }
+//same as above no needd to typecast
 
   export const signOutUser= async()=>{
     return await signOut(auth);
   }
+//same as above no need to typecast
 
-  export const onAuthStateChangedListner= (callback)=>{
+  export const onAuthStateChangedListner= (callback: NextOrObserver<User>)=>{
      onAuthStateChanged(auth, callback);
-  }
+  }//this function gets a callback function which is called via .next() in onAuthStateChangedListner whenever a user auth changes therfore for this callback function also we have a inbuit type provided by firestore
 
-  export const getCurrentUser=()=>{
+  export const getCurrentUser=():Promise<User | null>=>{
     return new Promise((resolve,reject)=>{
       const unsuscribe=onAuthStateChanged(auth, (userAuth)=>{
       unsuscribe();
