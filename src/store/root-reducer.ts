@@ -10,5 +10,9 @@ export const rootReducer=combineReducers({
     cart: cartReducer,
 })
 
+/*No need to type the root reducer since it's taking the type from the reducuers only which we are 
+exporting for example user reducer is of type UserState. It combines all the reducer type and make the final
+type */
+
 /* whenever any of the reducer changes complete react store updates and hence whereever the useSelector is
  is called that component updates */

@@ -1,8 +1,9 @@
 import { createSelector } from "reselect";
 import { CategoriesState } from './category.reducer'; 
 import { CategoryMap } from "./category.types";
+import { RootState } from "../store";
 
-const selectcategoriesReducer=((state):CategoriesState=>{
+const selectcategoriesReducer=((state: RootState):CategoriesState=>{
   // console.log('one')
    return state.categories});
    //this line state.categories capture the entire slice of categories.reducer mentioned in root reducer

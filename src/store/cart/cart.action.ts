@@ -1,6 +1,6 @@
 import {CART_ACTION_TYPES, CartItem} from "./cart.types";
 import { CategoryItem } from "../categories/category.types";
-import { withMatcher, Action, ActionWithPayload, createAction } from "../../utlis/reducer/reducer.utils";
+import { withMatcher, ActionWithPayload, createAction } from "../../utlis/reducer/reducer.utils";
 
 const addcartItem=(cartItem: CartItem[], product: CategoryItem): CartItem[]=>{
     //check
@@ -11,7 +11,6 @@ const addcartItem=(cartItem: CartItem[], product: CategoryItem): CartItem[]=>{
        //productfound.quantity+=1;   //this is incorrect way to update here same object is modified and refernce is not updated so react will not rerender as the react checks refernce with shallow comparision
         //return cartItem;
         return cartItem.map((item)=>( item.id===productfound.id ? {...item, quantity:productfound.quantity+=1}: item));
-        
     }
 
     //return new cartItem array
@@ -47,17 +46,17 @@ export const setCartItems=withMatcher((cartItems: CartItem[]):SetCartItem=>
     createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems)
 );
 
-export const addItemtoCart=withMatcher((cartItem: CartItem[],product: CategoryItem): SetCartItem=>{
+export const addItemtoCart=(cartItem: CartItem[],product: CategoryItem)=>{
     const newCartItem=addcartItem(cartItem, product);
     return setCartItems(newCartItem);
-})
+};
 
-export const removeItemToCart = withMatcher((cartItems: CartItem[], cartItemToRemove: CartItem):SetCartItem => {
+export const removeItemToCart = (cartItems: CartItem[], cartItemToRemove: CartItem) => {
     const newCartItem=removeCartItem(cartItems, cartItemToRemove);
     return setCartItems(newCartItem);
-});
+};
 
-export const clearItemFromCart = withMatcher((cartItems: CartItem[],cartItemToClear: CartItem): SetCartItem => {
+export const clearItemFromCart = (cartItems: CartItem[],cartItemToClear: CartItem) => {
     const newCartItem=clearCartItem(cartItems, cartItemToClear);
     return setCartItems(newCartItem);
-});
+};

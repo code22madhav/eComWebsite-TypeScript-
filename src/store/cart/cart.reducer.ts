@@ -22,6 +22,7 @@ export const cartReducer=((state=INITIAL_STATE, action: AnyAction)=>{ //no need 
     if(setCartItems.match(action)){
       return{...state, cartItems:action.payload};
     }
+    return state;
 
     
   
