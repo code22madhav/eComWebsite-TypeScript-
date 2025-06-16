@@ -1,5 +1,5 @@
 import { useState, FormEvent, ChangeEvent } from "react";
-import { AuthError, AuthErrorCodes } from "firebase/auth";
+import { AuthError } from "firebase/auth";
 // import { signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";

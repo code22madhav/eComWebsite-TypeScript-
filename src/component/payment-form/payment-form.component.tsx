@@ -4,7 +4,7 @@ import { FormContainer, PaymentFormContainer, PaymentButton } from "./payment-fo
 import { useSelector } from "react-redux";
 import { userSelector } from "../../store/user/user.selector";
 import { selectCartTotal } from "../../store/cart/cart.selector";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
 const PaymentForm = () => {
     const stripe=useStripe();
@@ -13,7 +13,7 @@ const PaymentForm = () => {
     const amount=useSelector(selectCartTotal);
     const [isPaymentProcessing, setPaymentProcessing]=useState(false);
 
-    const paymentHandler= async(e)=>{
+    const paymentHandler= async(e: FormEvent<HTMLFormElement>)=>{
         setPaymentProcessing(true);
         e.preventDefault();
         if(!stripe || !elements){
@@ -30,10 +30,15 @@ const PaymentForm = () => {
     
     const clientSecret = response.paymentIntent.client_secret;
     // console.log(clientSecret);
-
+    
+    const cardDetails=elements.getElement(CardElement);
+    if(cardDetails===null)
+      return
+//if you don't add this check here then card in line 40 will throw error since typescript will think this card
+//can be sometime some invalid card Element or undefined therfore checking it before asigning
     const paymentResult = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
-        card: elements.getElement(CardElement),
+        card: cardDetails,
         billing_details: {
           name: user ? user.displayName : 'Guest',
         },

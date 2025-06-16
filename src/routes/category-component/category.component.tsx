@@ -6,8 +6,13 @@ import { useSelector } from "react-redux";
 import { categorySelector, selectcategoriesisLoading } from "../../store/categories/category.selector";
 import Spinner from "../../component/spinner/spinner.component";
 
+type CategoryRouteParams={
+  category: string,
+}
+//we know useParams will never be undefined but typescipt requires it to be more safe since useParams cab
+//be string or undefined therfore we are predicating it to be string via CategoryRouteParms type. 
 const Category=()=>{
-    const {category}=useParams();
+    const {category}=useParams<keyof CategoryRouteParams>() as CategoryRouteParams;
     const categoriesMap=useSelector(categorySelector);
     const isLoading=useSelector(selectcategoriesisLoading)
     // const { categoriesMap }=useContext(CategoriesContext);
