@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
+import { AuthError, AuthErrorCodes } from "firebase/auth";
 // import { signInAuthUserWithEmailAndPassword} from "../../utlis/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, {BUTTON_TYPE_CLASSES} from "../button/button.component";
@@ -21,13 +22,13 @@ const SigninForm= ()=>{
     const resetFormFeilds=()=>{
         setFormFields(defaultFormFields);           //if we remove this fun state value will remain same and form will still look filled even after sucessfull submit 
     }
-    const handleSubmit=async(event)=>{
+    const handleSubmit=async(event: FormEvent<HTMLFormElement>)=>{
         event.preventDefault();         //prevent page reloding after submit
         try {
             dispatch(emailSignInStart(email, password));
             resetFormFeilds();
         } catch (error) {
-            switch (error.code) {
+            switch ((error as AuthError).code) {
                 case 'auth/wrong-password':
                   alert('incorrect password for email');
                   break;
@@ -39,7 +40,7 @@ const SigninForm= ()=>{
               }
         }
     }
-    const onChangeHandler=(event)=>{
+    const onChangeHandler=(event:ChangeEvent<HTMLInputElement>)=>{
         const {name, value}= event.target;
         setFormFields({...formFields,[name]:value});    //value property help to indentify which input is changed otherwise we can't write a generic function to handle all the 4 changes in input fields
     }
